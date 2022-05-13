@@ -2,13 +2,14 @@ package de.wagenknecht.downloaderapp;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button download;
     TextView getUrl;
-    ProgressDialog progressDialog;
-    ImageView imageView;
+    protected static ProgressBar progressBar;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -54,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         download = findViewById(R.id.btnDownload);
         getUrl = findViewById(R.id.inputUrl);
+        progressBar = findViewById(R.id.progressBar);
+
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(MainActivity.this, DownloadService.class);
                     intent.putExtra("url", url);
+                    intent.putExtra("receiver", new DownloadReceiver(new Handler()));
                     startForegroundService(intent);
+                    progressBar.setProgress(0);
+                    progressBar.setMax(100);
                 }
 
             }
