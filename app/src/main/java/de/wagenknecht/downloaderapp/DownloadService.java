@@ -16,6 +16,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -52,17 +54,17 @@ public class DownloadService extends Service {
             }
         }).start();
 
-        final String CHANNELID = "Foreground";
-        NotificationChannel channel = new NotificationChannel(
-                CHANNELID,
-                CHANNELID,
-                NotificationManager.IMPORTANCE_DEFAULT
-        );
-        getSystemService(NotificationManager.class).createNotificationChannel(channel);
-        Notification.Builder notification= new Notification.Builder(this, CHANNELID)
-                .setContentText("Download still running")
-                .setSmallIcon(R.drawable.ic_launcher_background);
-        startForeground(101, notification.build());
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Download Status")
+                .setContentText("Dein Download läuft")
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(DownloadService.this);
+        notificationManagerCompat.notify(1, builder.build());
+        startForeground(1, builder.build());
 
         return super.onStartCommand(intent,flags,startId);
     }
@@ -113,17 +115,16 @@ public class DownloadService extends Service {
             outputStream.close();
             inputStream.close();
 
-            final String CHANNELID = "Foreground";
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNELID,
-                    CHANNELID,
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            getSystemService(NotificationManager.class).createNotificationChannel(channel);
-            Notification.Builder notification= new Notification.Builder(this, CHANNELID)
-                    .setContentText("Fertig")
-                    .setSmallIcon(R.drawable.ic_launcher_background);
-            startForeground(101, notification.build());
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle("Download Status")
+                    .setContentText("Dein Download ist abgeschlossen")
+                    .setAutoCancel(true)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(DownloadService.this);
+            notificationManagerCompat.notify(1, builder.build());
 
         } catch (Exception e) {
             e.printStackTrace();

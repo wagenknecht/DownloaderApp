@@ -2,6 +2,8 @@ package de.wagenknecht.downloaderapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
+    //from Stackoverflow
     /**
      * Checks if the app has permission to write to device storage
      *
@@ -55,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        verifyStoragePermissions(this);
+        createNotificationChannel();
+
+
         download = findViewById(R.id.btnDownload);
         getUrl = findViewById(R.id.inputUrl);
         progressBar = findViewById(R.id.progressBar);
@@ -79,8 +86,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        CharSequence name = "Download Status";
+        NotificationChannel alarmChannel = new NotificationChannel("alarmChannel", name, NotificationManager.IMPORTANCE_HIGH);
+        alarmChannel.setDescription("Zeigt den Status des derzeitigen Downloads an");
 
-
-
-
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(alarmChannel);
+    }
 }

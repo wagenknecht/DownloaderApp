@@ -28,10 +28,6 @@ class DownloadReceiver extends ResultReceiver {
             int progress = resultData.getInt(PROGRESS);
 
             MainActivity.progressBar.setProgress(progress);
-            if (progress == FINISHED) {
-
-
-            }
         }
     }
 }
