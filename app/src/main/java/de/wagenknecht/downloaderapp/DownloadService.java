@@ -2,18 +2,13 @@ package de.wagenknecht.downloaderapp;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -39,10 +34,7 @@ public class DownloadService extends Service {
     private static final String STORAGENOTWRITABLE
             = "external storage is not accessable or not writable";
 
-
     private String getUrl;
-
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -57,14 +49,16 @@ public class DownloadService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Download Status")
-                .setContentText("Dein Download läuft")
+                .setContentText("Dein Download läuft.")
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
+
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(DownloadService.this);
         notificationManagerCompat.notify(1, builder.build());
         startForeground(1, builder.build());
+
 
         return super.onStartCommand(intent,flags,startId);
     }
@@ -109,16 +103,18 @@ public class DownloadService extends Service {
                 Log.d(TAG, "downloadFile: " + (long) total * 100 / fileLength + " total:" + total + " filelength:" + fileLength);
                 receiver.send(UPDATE_PROGRESS, resultData);
                 outputStream.write(buffer, 0, read);
-
             }
             outputStream.flush();
             outputStream.close();
             inputStream.close();
 
+            stopForeground(true);
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("Download Status")
-                    .setContentText("Dein Download ist abgeschlossen")
+                    .setContentText("Dein Download ist abgeschlossen.")
+                    .setOngoing(false)
                     .setAutoCancel(true)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -129,8 +125,5 @@ public class DownloadService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
     }
 }

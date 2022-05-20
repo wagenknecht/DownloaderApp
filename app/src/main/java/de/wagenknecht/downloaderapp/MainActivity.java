@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         verifyStoragePermissions(this);
-        createNotificationChannel();
-
 
         download = findViewById(R.id.btnDownload);
         getUrl = findViewById(R.id.inputUrl);
@@ -69,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createNotificationChannel();
                 String url = getUrl.getText().toString();
                 if(url.isEmpty()){
                     Toast.makeText(MainActivity.this, "Bitte URL angeben", Toast.LENGTH_SHORT).show();
@@ -87,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
-        CharSequence name = "Download Status";
-        NotificationChannel alarmChannel = new NotificationChannel("alarmChannel", name, NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel alarmChannel = new NotificationChannel("alarmChannel", "Download Status", NotificationManager.IMPORTANCE_HIGH);
         alarmChannel.setDescription("Zeigt den Status des derzeitigen Downloads an");
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
