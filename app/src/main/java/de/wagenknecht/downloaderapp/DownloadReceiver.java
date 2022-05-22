@@ -7,7 +7,7 @@ import android.os.ResultReceiver;
 class DownloadReceiver extends ResultReceiver {
     public static final String PROGRESS
             = "progress";
-    public static final int	FINISHED
+    public static final int FINISHED
             = 100;
 
     public DownloadReceiver(Handler handler) {

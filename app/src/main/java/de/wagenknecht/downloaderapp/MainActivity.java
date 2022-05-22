@@ -31,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     //from Stackoverflow
+
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 createNotificationChannel();
                 String url = getUrl.getText().toString();
-                if(url.isEmpty()){
+                if (url.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Bitte URL angeben", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(MainActivity.this, DownloadService.class);

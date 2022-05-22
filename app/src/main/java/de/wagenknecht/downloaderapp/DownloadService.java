@@ -23,13 +23,13 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class DownloadService extends Service {
-    public 	static final int 	UPDATE_PROGRESS
+    public static final int UPDATE_PROGRESS
             = 8344;
-    public 	static final String URL
+    public static final String URL
             = "url";
-    public 	static final String RECEIVER
+    public static final String RECEIVER
             = "receiver";
-    private static final int	BUFFERSIZE
+    private static final int BUFFERSIZE
             = 1024;
     private static final String STORAGENOTWRITABLE
             = "external storage is not accessable or not writable";
@@ -46,7 +46,7 @@ public class DownloadService extends Service {
             }
         }).start();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this, "alarmChannel")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Download Status")
                 .setContentText("Dein Download läuft.")
@@ -60,13 +60,13 @@ public class DownloadService extends Service {
         startForeground(1, builder.build());
 
 
-        return super.onStartCommand(intent,flags,startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
 
     @Nullable
     @Override
-    public IBinder onBind (Intent intent){
+    public IBinder onBind(Intent intent) {
         return null;
     }
 
@@ -76,15 +76,15 @@ public class DownloadService extends Service {
         try {
             Log.d(TAG, "downloadFile: " + startUrl);
             URL fileurl = new URL(startUrl);
-            String fileName = startUrl.substring( startUrl.lastIndexOf('/')+1, startUrl.length() );
+            String fileName = startUrl.substring(startUrl.lastIndexOf('/') + 1, startUrl.length());
             URLConnection urlConnection = fileurl.openConnection();
             urlConnection.connect();
             int fileLength = urlConnection.getContentLength();
 
-            InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream(),8192);
+            InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream(), 8192);
 
             File downloadordner = new File(Environment.getExternalStorageDirectory(), "Download");
-            if(!downloadordner.exists()){
+            if (!downloadordner.exists()) {
                 downloadordner.mkdirs();
             }
 
@@ -94,7 +94,7 @@ public class DownloadService extends Service {
             byte[] buffer = new byte[1024];
             long total = 0;
             int read;
-            while ((read = inputStream.read(buffer)) != -1){
+            while ((read = inputStream.read(buffer)) != -1) {
                 total += read;
 
                 Bundle resultData = new Bundle();
@@ -110,7 +110,7 @@ public class DownloadService extends Service {
 
             stopForeground(true);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this,"alarmChannel")
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(DownloadService.this, "alarmChannel")
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("Download Status")
                     .setContentText("Dein Download ist abgeschlossen.")
